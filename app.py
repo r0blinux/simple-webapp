@@ -1,6 +1,9 @@
 import os
 from flask import Flask
 from flaskext.mysql import MySQL      # For newer versions of flask-mysql 
+
+my_host = os.uname()[1]
+
 # from flask.ext.mysql import MySQL   # For older versions of flask-mysql
 app = Flask(__name__)
 
@@ -19,13 +22,14 @@ conn = mysql.connect()
 
 cursor = conn.cursor()
 
+
 @app.route("/")
 def main():
-    return "Welcome!"
+    return f"Welcome to {my_host}!"
 
-@app.route('/how are you')
+@app.route("/how are you")
 def hello():
-    return 'I am good, how about you?'
+    return f"I am good, how about you?\n{my_host}"
 
 @app.route('/read from database')
 def read():
@@ -36,7 +40,8 @@ def read():
       result.append(row[0])
       row = cursor.fetchone()
 
-    return ",".join(result)
+    query = ",".join(result)
+    return f"{query}\n{my_host}"
 
 if __name__ == "__main__":
     app.run()
